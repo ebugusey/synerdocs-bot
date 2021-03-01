@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace SynerdocsBot
 {
@@ -11,13 +12,16 @@ namespace SynerdocsBot
     {
         readonly DiscordClient _botClient;
         readonly IServiceProvider _serviceProvider;
+        readonly ILogger<BotHosting> _logger;
 
         public BotHosting(
             DiscordClient botClient,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            ILogger<BotHosting> logger)
         {
             _botClient = botClient;
             _serviceProvider = serviceProvider;
+            _logger = logger;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -28,6 +32,8 @@ namespace SynerdocsBot
                 Services = _serviceProvider,
             });
 
+            commands.CommandErrored += LogCommandError;
+
             commands.RegisterCommands<CommandsModule>();
 
             await _botClient.ConnectAsync();
@@ -36,6 +42,15 @@ namespace SynerdocsBot
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             await _botClient.DisconnectAsync();
+        }
+
+        Task LogCommandError(CommandsNextExtension sender, CommandErrorEventArgs e)
+        {
+            _logger.LogError(e.Exception,
+                "{Command} thrown an exception",
+                e.Command);
+
+            return Task.CompletedTask;
         }
     }
 }
