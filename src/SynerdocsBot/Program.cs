@@ -1,4 +1,4 @@
-﻿using DSharpPlus;
+using DSharpPlus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,12 +35,13 @@ namespace SynerdocsBot
                 var factory = provider.GetRequiredService<DiscordClientFactory>();
                 return factory.Create();
             });
+
+            services.AddSingleton<UnsplashClientFactory>();
         }
 
         static void ConfigureLogging(ILoggingBuilder cfg)
         {
             cfg.ClearProviders();
-
             var serilog = new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .MinimumLevel.Verbose()
