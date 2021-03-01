@@ -1,4 +1,5 @@
 BotToken: ''
+UnsplashToken: ''
 Logging:
   LogLevel:
     Default: Information
