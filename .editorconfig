@@ -14,3 +14,7 @@ indent_size = 2
 
 [*.{csproj,props}]
 indent_size = 2
+
+[*.cs]
+# Use "Async" suffix in names of methods that return an awaitable type.
+dotnet_diagnostic.vsthrd200.severity = none

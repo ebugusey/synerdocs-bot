@@ -29,12 +29,9 @@ namespace SynerdocsBot
         static void ConfigureServices(IServiceCollection services)
         {
             services.AddHostedService<BotHosting>();
-            services.AddTransient<DiscordClientFactory>();
-            services.AddSingleton<DiscordClient>(provider =>
-            {
-                var factory = provider.GetRequiredService<DiscordClientFactory>();
-                return factory.Create();
-            });
+            services.AddSingleton<DiscordClientFactory>();
+
+            services.AddSingleton<IMessageHandler, PingMessage>();
 
             services.AddSingleton<UnsplashClientFactory>();
         }
